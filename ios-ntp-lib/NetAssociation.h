@@ -56,9 +56,10 @@ union ntpTime   ntp_time_now(void);
 union ntpTime   unix2ntp(const struct timeval * tv);
 double          ntpDiffSeconds(union ntpTime * start, union ntpTime * stop);
 
+@class NetAssociation;
 @protocol NetAssociationDelegate <NSObject>
 
-- (void) reportFromDelegate;
+- (void) reportFromDelegate:(NetAssociation *)sender;
 
 @end
 
@@ -66,7 +67,7 @@ double          ntpDiffSeconds(union ntpTime * start, union ntpTime * stop);
 
 @interface NetAssociation : NSObject <GCDAsyncUdpSocketDelegate, NetAssociationDelegate>
 
-@property (nonatomic, weak) id delegate;
+@property (nonatomic, weak) id<NetAssociationDelegate> delegate;
 
 @property (readonly) NSString *         server;             // server address "123.45.67.89"
 @property (readonly) BOOL               active;             // is this clock running yet?

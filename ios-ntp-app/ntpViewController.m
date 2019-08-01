@@ -6,7 +6,7 @@
 
 #import "ntpViewController.h"
 
-@interface ntpViewController () {
+@interface ntpViewController () <NetAssociationDelegate> {
 
     NetworkClock *          netClock;           // complex clock
     NetAssociation *        netAssociation;     // one-time server
@@ -37,6 +37,8 @@
   └──────────────────────────────────────────────────────────────────────────────────────────────────┘*/
     [[NSRunLoop currentRunLoop] addTimer:repeatingTimer
                                  forMode:NSDefaultRunLoopMode];
+    
+    [self timerFireMethod:repeatingTimer];
 }
 
 /*┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
@@ -62,7 +64,7 @@
 /*┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
   ┃ Called when that single NetAssociation has a network time to report.                             ┃
   ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛*/
-- (void) reportFromDelegate {
+- (void) reportFromDelegate:(NetAssociation *)sender {
     _timeCheckLabel.text = [NSString stringWithFormat:@"System ahead by: %5.3f mSec",
                             netAssociation.offset * 1000.0];
 }

@@ -103,7 +103,6 @@ double ntpDiffSeconds(union ntpTime * start, union ntpTime * stop) {
 /*┌──────────────────────────────────────────────────────────────────────────────────────────────────┐
   │ Set initial/default values for instance variables ...                                            │
   └──────────────────────────────────────────────────────────────────────────────────────────────────┘*/
-        _delegate = self;
         pollingIntervalIndex = 0;                           // ensure the first timer firing is soon
         _active = FALSE;                                    // isn't running till it reports time ...
         _trusty = FALSE;                                    // don't trust this clock to start with ...
@@ -345,11 +344,18 @@ double ntpDiffSeconds(union ntpTime * start, union ntpTime * stop) {
     else {
         NTP_Logging(@"  [%@] : bad data .. %7.1f", _server, ntpDiffSeconds(&ntpServerBaseTime, &ntpServerSendTime));
     }
+    
+    [self reportFromDelegate:self];
 
-    dispatch_async(dispatch_get_main_queue(), ^{ [self->_delegate reportFromDelegate]; });// tell delegate we're done
+    // tell delegate we're done
+    if (self.delegate && [self.delegate respondsToSelector:@selector(reportFromDelegate:)]) {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            [self.delegate reportFromDelegate:self];
+        });
+    }
 }
 
-- (void) reportFromDelegate {
+- (void) reportFromDelegate:(NetAssociation *)sender {
 /*┌──────────────────────────────────────────────────────────────────────────────────────────────────┐
   │ the packet is trustworthy -- compute and store offset in 8-slot fifo ...                         │
   └──────────────────────────────────────────────────────────────────────────────────────────────────┘*/

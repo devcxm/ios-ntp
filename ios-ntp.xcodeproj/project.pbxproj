@@ -31,6 +31,7 @@
 		86F300C61A1481C00078CBF9 /* NetAssociation.m in Sources */ = {isa = PBXBuildFile; fileRef = D91E95DA13D9AF8C004E4194 /* NetAssociation.m */; };
 		86F300C81A1481C00078CBF9 /* NetworkClock.m in Sources */ = {isa = PBXBuildFile; fileRef = D91E95DC13D9AF8C004E4194 /* NetworkClock.m */; };
 		86F300CC1A1483900078CBF9 /* NSDate+NetworkClock.m in Sources */ = {isa = PBXBuildFile; fileRef = D9B2BA4113D9C06100C9385A /* NSDate+NetworkClock.m */; };
+		A5274D8D2318D41D0086F5F6 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A5274D8C2318D41D0086F5F6 /* Launch Screen.storyboard */; };
 		B1956546ACFB862615592FFB /* libPods-ios_fwk.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AB846917FAF7622B59FAABD2 /* libPods-ios_fwk.a */; };
 		D91E95E513D9AF8C004E4194 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D91E95DE13D9AF8C004E4194 /* main.m */; };
 		D91E95FF13D9B063004E4194 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D91E95F913D9B063004E4194 /* InfoPlist.strings */; };
@@ -88,6 +89,7 @@
 		86CE9ED51A2841FB00AFDE79 /* ntpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ntpViewController.h; sourceTree = "<group>"; };
 		86CE9ED61A2841FB00AFDE79 /* ntpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ntpViewController.m; sourceTree = "<group>"; };
 		86F300AE1A14815C0078CBF9 /* libios-lib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libios-lib.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A5274D8C2318D41D0086F5F6 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		AB846917FAF7622B59FAABD2 /* libPods-ios_fwk.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ios_fwk.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B0D1F2DE340986D36CFEE2A6 /* Pods-ios_fwk.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ios_fwk.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ios_fwk/Pods-ios_fwk.debug.xcconfig"; sourceTree = "<group>"; };
 		CFAEC1D6E2538AD9D8154CC0 /* Pods-ios_fwk.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ios_fwk.release.xcconfig"; path = "Pods/Target Support Files/Pods-ios_fwk/Pods-ios_fwk.release.xcconfig"; sourceTree = "<group>"; };
@@ -283,6 +285,7 @@
 				8602E82F1A1D5517001C265E /* ntpAppDelegate.m */,
 				86CE9ED51A2841FB00AFDE79 /* ntpViewController.h */,
 				86CE9ED61A2841FB00AFDE79 /* ntpViewController.m */,
+				A5274D8C2318D41D0086F5F6 /* Launch Screen.storyboard */,
 			);
 			path = "ios-ntp-app";
 			sourceTree = "<group>";
@@ -425,6 +428,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -463,6 +467,7 @@
 				863555311E09976D00FB8E18 /* ntp.hosts in Resources */,
 				130140C620C5A0F4003D167F /* Default-568h@2x.png in Resources */,
 				86734BD71A2181FD00F191CE /* Storyboard.storyboard in Resources */,
+				A5274D8D2318D41D0086F5F6 /* Launch Screen.storyboard in Resources */,
 				D91E95FF13D9B063004E4194 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -816,7 +821,7 @@
 				ENABLE_TESTABILITY = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = IOS_NTP_LOGGING;
+				GCC_PREPROCESSOR_DEFINITIONS = "";
 				GCC_VERSION = "";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -883,7 +888,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEVELOPMENT_TEAM = CXE9ZR7J3U;
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_PREPROCESSOR_DEFINITIONS = IOS_NTP_LOGGING;
+				GCC_PREPROCESSOR_DEFINITIONS = "";
 				GCC_VERSION = "";
 				INFOPLIST_FILE = "ios-ntp-rez/ntp-app-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (

@@ -10,7 +10,7 @@
 #import "ntp-log.h"
 #import <CocoaAsyncSocket/GCDAsyncUdpSocket.h>
 
-@interface NetworkClock () {
+@interface NetworkClock () <NetAssociationDelegate> {
 
     NSMutableArray *        timeAssociations;
 
@@ -18,8 +18,13 @@
     NSSortDescriptor *      dispersionSortDescriptor;
 
     dispatch_queue_t        associationDelegateQueue;
+    dispatch_semaphore_t    _semaphore;
 
 }
+
+@property (atomic, strong, readwrite) NSNumber *timeoutTag;
+
+@property (atomic, strong, readwrite) NSNumber *fetchTag;
 
 @end
 
@@ -57,10 +62,9 @@
 /*┌──────────────────────────────────────────────────────────────────────────────────────────────────┐
   │ .. and fill that array with the time hosts obtained from "ntp.hosts" (or built-ins if absent) .. │
   └──────────────────────────────────────────────────────────────────────────────────────────────────┘*/
-        [[[NSOperationQueue alloc] init] addOperation:[[NSInvocationOperation alloc]
-                                                       initWithTarget:self
-                                                       selector:@selector(createAssociations)
-                                                       object:nil]];
+        [self createAssociations];
+        
+        _semaphore = dispatch_semaphore_create(0);
     }
 
     return self;
@@ -72,6 +76,13 @@
 - (NSTimeInterval) networkOffset {
 
     if (timeAssociations.count == 0) return 0.0;
+    
+    if (!self.fetchTag) {
+        if (!self.timeoutTag) {
+            self.timeoutTag = @(1);
+            dispatch_semaphore_wait(_semaphore, dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)));
+        }
+    }
 
     NSArray *       sortedArray = [timeAssociations sortedArrayUsingDescriptors:sortDescriptors];
 
@@ -206,7 +217,9 @@
   │  ... now start one 'association' (network clock server) for each address.                        │
   └──────────────────────────────────────────────────────────────────────────────────────────────────┘*/
     for (NSString * server in hostAddresses) {
-        [timeAssociations addObject:[[NetAssociation alloc] initWithServerName:server]];
+        NetAssociation * netAssociation = [[NetAssociation alloc] initWithServerName:server];
+        netAssociation.delegate = self;
+        [timeAssociations addObject:netAssociation];
     }
 
     [self enableAssociations];
@@ -217,7 +230,10 @@
   ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛*/
 - (void) enableAssociations {
 
-    for (NetAssociation * timeAssociation in timeAssociations) [timeAssociation enable];
+    for (NetAssociation * timeAssociation in timeAssociations) {
+        [timeAssociation sendTimeQuery];
+        [timeAssociation enable];
+    }
 
 }
 
@@ -237,6 +253,14 @@
 
     for (NetAssociation * timeAssociation in timeAssociations) [timeAssociation finish];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+#pragma mark - NetAssociationDelegate
+- (void)reportFromDelegate:(NetAssociation *)sender {
+    if (!self.fetchTag) {
+        self.fetchTag = @(YES);
+        dispatch_semaphore_signal(_semaphore);
+    }
 }
 
 #pragma mark -
